@@ -3,7 +3,7 @@
 {% block content %}
 <div class="d-flex justify-content-between align-items-center mb-4">
     <h4 class="mb-0">Minhas Tarefas</h4>
-    <a href="#" class="btn btn-primary btn-sm">+ Nova Tarefa</a>
+    <a href="{% url 'task_create' %}" class="btn btn-primary btn-sm">+ Nova Tarefa</a>
 </div>
 
 {% if tasks %}
