@@ -1,0 +1,43 @@
+{% extends 'tasks/base.html' %}
+
+{% block content %}
+<div class="row justify-content-center">
+    <div class="col-md-4">
+
+        <div class="card shadow-sm">
+            <div class="card-header bg-primary text-white">
+                <h5 class="mb-0">Entrar</h5>
+            </div>
+            <div class="card-body">
+
+                {% if form.errors %}
+                    <div class="alert alert-danger">Usuário ou senha incorretos.</div>
+                {% endif %}
+
+                <form method="post">
+                    {% csrf_token %}
+
+                    <div class="mb-3">
+                        <label class="form-label fw-semibold">Usuário</label>
+                        <input type="text" name="username" class="form-control" autofocus>
+                    </div>
+
+                    <div class="mb-4">
+                        <label class="form-label fw-semibold">Senha</label>
+                        <input type="password" name="password" class="form-control">
+                    </div>
+
+                    <button type="submit" class="btn btn-primary w-100">Entrar</button>
+                </form>
+
+                <hr>
+                <p class="text-center mb-0 text-muted">
+                    Não tem conta? <a href="{% url 'register' %}">Cadastre-se</a>
+                </p>
+
+            </div>
+        </div>
+
+    </div>
+</div>
+{% endblock %}

@@ -1,0 +1,55 @@
+{% extends 'tasks/base.html' %}
+
+{% block content %}
+<div class="row justify-content-center">
+    <div class="col-md-4">
+
+        <div class="card shadow-sm">
+            <div class="card-header bg-success text-white">
+                <h5 class="mb-0">Criar conta</h5>
+            </div>
+            <div class="card-body">
+
+                {% if form.errors %}
+                    <div class="alert alert-danger">Corrija os erros abaixo.</div>
+                {% endif %}
+
+                <form method="post">
+                    {% csrf_token %}
+
+                    <div class="mb-3">
+                        <label class="form-label fw-semibold">Usuário</label>
+                        <input type="text" name="username" class="form-control"
+                               value="{{ form.username.value|default:'' }}">
+                        {% if form.username.errors %}
+                            <small class="text-danger">{{ form.username.errors|join:", " }}</small>
+                        {% endif %}
+                    </div>
+
+                    <div class="mb-3">
+                        <label class="form-label fw-semibold">Senha</label>
+                        <input type="password" name="password1" class="form-control">
+                    </div>
+
+                    <div class="mb-4">
+                        <label class="form-label fw-semibold">Confirmar senha</label>
+                        <input type="password" name="password2" class="form-control">
+                        {% if form.password2.errors %}
+                            <small class="text-danger">{{ form.password2.errors|join:", " }}</small>
+                        {% endif %}
+                    </div>
+
+                    <button type="submit" class="btn btn-success w-100">Criar conta</button>
+                </form>
+
+                <hr>
+                <p class="text-center mb-0 text-muted">
+                    Já tem conta? <a href="{% url 'login' %}">Entrar</a>
+                </p>
+
+            </div>
+        </div>
+
+    </div>
+</div>
+{% endblock %}

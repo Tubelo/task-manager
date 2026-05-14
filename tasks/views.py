@@ -1,5 +1,7 @@
 from django.shortcuts import render, redirect, get_object_or_404
 from django.contrib.auth.decorators import login_required
+from django.contrib.auth import authenticate, login, logout
+from django.contrib.auth.forms import UserCreationForm
 from .models import Task
 from .forms import TaskForm
 
@@ -40,3 +42,35 @@ def task_delete(request, pk):
         task.delete()
         return redirect('task_list')
     return render(request, 'tasks/task_confirm_delete.html', {'task': task})
+
+def user_login(request):
+    if request.user.is_authenticated:
+        return redirect('task_list')
+    if request.method == 'POST':
+        username = request.POST['username']
+        password = request.POST['password']
+        user = authenticate(request, username=username, password=password)
+        if user:
+            login(request, user)
+            return redirect('task_list')
+        else:
+            form = type('obj', (object,), {'errors': True})()
+            return render(request, 'tasks/login.html', {'form': form})
+    return render(request, 'tasks/login.html', {'form': type('obj', (object,), {'errors': False})()})
+
+def user_register(request):
+    if request.user.is_authenticated:
+        return redirect('task_list')
+    if request.method == 'POST':
+        form = UserCreationForm(request.POST)
+        if form.is_valid():
+            user = form.save()
+            login(request, user)
+            return redirect('task_list')
+    else:
+        form = UserCreationForm()
+    return render(request, 'tasks/register.html', {'form': form})
+
+def user_logout(request):
+    logout(request)
+    return redirect('login')
