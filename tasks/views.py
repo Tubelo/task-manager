@@ -4,11 +4,27 @@ from django.contrib.auth import authenticate, login, logout
 from django.contrib.auth.forms import UserCreationForm
 from .models import Task
 from .forms import TaskForm
+from django.contrib import messages
 
 @login_required
 def task_list(request):
     tasks = Task.objects.filter(owner=request.user)
-    return render(request, 'tasks/task_list.html', {'tasks': tasks})
+
+    # Filtros
+    status   = request.GET.get('status')
+    priority = request.GET.get('priority')
+
+    if status:
+        tasks = tasks.filter(status=status)
+    if priority:
+        tasks = tasks.filter(priority=priority)
+
+    context = {
+        'tasks':            tasks,
+        'selected_status':   status   or '',
+        'selected_priority': priority or '',
+    }
+    return render(request, 'tasks/task_list.html', context)
 
 @login_required
 def task_create(request):
@@ -18,6 +34,7 @@ def task_create(request):
             task = form.save(commit=False)
             task.owner = request.user
             task.save()
+            messages.success(request, 'Tarefa criada com sucesso!')
             return redirect('task_list')
     else:
         form = TaskForm()
@@ -30,6 +47,7 @@ def task_edit(request, pk):
         form = TaskForm(request.POST, instance=task)
         if form.is_valid():
             form.save()
+            messages.success(request, 'Tarefa atualizada com sucesso!')
             return redirect('task_list')
     else:
         form = TaskForm(instance=task)
@@ -40,6 +58,7 @@ def task_delete(request, pk):
     task = get_object_or_404(Task, pk=pk, owner=request.user)
     if request.method == 'POST':
         task.delete()
+        messages.success(request, 'Tarefa excluída.')
         return redirect('task_list')
     return render(request, 'tasks/task_confirm_delete.html', {'task': task})
 
