@@ -124,3 +124,5 @@ LOGIN_REDIRECT_URL = '/'
 
 STATIC_ROOT = BASE_DIR / 'staticfiles'
 STATICFILES_STORAGE = 'whitenoise.storage.CompressedManifestStaticFilesStorage'
+
+CSRF_TRUSTED_ORIGINS = ['https://task-manager-production-8322.up.railway.app']
